@@ -1,0 +1,37 @@
+#!/bin/sh
+set -e
+
+# Definicja ścieżki do lokalnego UV (wewnątrz projektu)
+LOCAL_BIN_DIR="$(dirname "$0")/.bin"
+LOCAL_UV="$LOCAL_BIN_DIR/uv"
+
+# 1. Sprawdź, czy uv jest w systemie globalnie
+if command -v uv >/dev/null 2>&1; then
+    UV_CMD="uv"
+# 2. Jeśli nie, sprawdź czy mamy je pobrane lokalnie
+elif [ -f "$LOCAL_UV" ]; then
+    UV_CMD="$LOCAL_UV"
+# 3. Jeśli nie ma nigdzie, pobierz je
+else
+    echo "📦 Mental Refinery: Installing standalone 'uv' to $LOCAL_BIN_DIR..."
+    mkdir -p "$LOCAL_BIN_DIR"
+    # Pobierz uv bez modyfikowania PATH systemowego, prosto do folderu projektu
+    export UV_INSTALL_DIR="$LOCAL_BIN_DIR"
+    export UV_NO_MODIFY_PATH=1
+    curl -LsSf https://astral.sh/uv/install.sh | sh > /dev/null 2>&1
+    UV_CMD="$LOCAL_UV"
+    echo "✅ Ready."
+fi
+
+# Wykonaj polecenie
+# INTERCEPTOR: Jeśli komenda to 'run', przekieruj do Iron Dome Dispatcher
+if [ "$1" = "run" ]; then
+    shift
+    # Eksportujemy UV_CMD, aby dispatcher.py mógł go użyć do uruchamiania podprocesów
+    export UV_CMD="$UV_CMD"
+    exec "$UV_CMD" run tools/core/dispatcher.py "$@"
+else
+    # Standardowe polecenia uv (sync, pip, venv...)
+    exec "$UV_CMD" "$@"
+fi
+

@@ -1,0 +1,23 @@
+{
+    "scripts/youtube_transcript.py": {
+        "guard": "youtube",
+        "log": true,
+        "description": "YouTube Transcript Downloader"
+    },
+    "scripts/yt_finder.py": {
+        "guard": "default", 
+        "log": true,
+        "description": "YouTube Video Finder"
+    },
+    "scripts/get_summary_prompt.py": {
+        "guard": "none",
+        "log": true,
+        "description": "Returns the system prompt for summarization"
+    },
+    "default": {
+        "guard": "none",
+        "log": true,
+        "description": "Generic Tool"
+    }
+}
+

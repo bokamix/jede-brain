@@ -1,0 +1,31 @@
+.DS_Store
+*.key
+__pycache__/
+*.pyc
+
+# --- IDE & Local Settings ---
+.cursor/
+.claude/
+
+# --- Mental Refinery Tools ---
+# Ignore generated transcriptions (user data)
+tools/scripts/transcriptions/*
+!tools/scripts/transcriptions/.keep
+
+# Ignore local uv installation (the wrapper handles this)
+tools/.bin/
+
+# --- Configuration & Secrets ---
+# Ignore everything in config...
+config/*
+# ...except safe example files and the keep file
+!config/.keep
+!config/*.example.json
+!config/*.example.yaml
+!config/.env.example
+
+# Specific legacy ignores
+tools/firebase_key.json
+
+# --- Iron Dome State ---
+tools/.guard/
